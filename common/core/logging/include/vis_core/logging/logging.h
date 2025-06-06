@@ -2,21 +2,19 @@
 
 #include <cstdio>
 #include <stdexcept>
-#include<string>
-
-
+#include <string>
 
 /**
  * @brief 信息打印管理
  */
-#define VISCORE_HIGHLIGHT_INFO(msg...)                   \
+#define VISCORE_HIGHLIGHT_INFO(msg...)       \
     do                                       \
     {                                        \
         printf("\033[35m[   INFO   ] " msg); \
         printf("\033[0m\n");                 \
     } while (false)
 
-#define VISCORE_WARNING_INFO(msg...)                     \
+#define VISCORE_WARNING_INFO(msg...)         \
     do                                       \
     {                                        \
         printf("\033[33m[   WARN   ] " msg); \
@@ -37,11 +35,11 @@
         printf("\033[0m\n");                 \
     } while (false)
 
-#define VISCORE_NORMAL_INFO(msg...)          \
-    do                                       \
-    {                                        \
-        printf("[   INFO   ] " msg);        \
-        printf("\n");                        \
+#define VISCORE_NORMAL_INFO(msg...)  \
+    do                               \
+    {                                \
+        printf("[   INFO   ] " msg); \
+        printf("\n");                \
     } while (false)
 
 /**
