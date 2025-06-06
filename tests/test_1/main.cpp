@@ -33,8 +33,7 @@ int main()
         std::cout <<  "value : " << value <<std::endl;
     }
     
-
-
+    
     size_t count = 0;
     while (true)
     {

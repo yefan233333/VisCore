@@ -31,7 +31,7 @@ public:
     {
         if (!_has_value)
             VISCORE_THROW_ERROR("属性未设置");
-        return _value;
+        return _value;  
     }
 
     WrapperType &getValue()
@@ -114,3 +114,5 @@ private:                                                                        
     {                                                                                     \
         _##PROPERTY_NAME##_prop.clearValue();                                             \
     }
+
+    
