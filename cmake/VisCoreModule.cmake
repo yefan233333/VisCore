@@ -121,3 +121,34 @@ function(VisCore_add_module module_name)
 endfunction()
 
         
+function(VisCore_add_exe exe_name)
+    # 处理函数参数
+    set(multi_args EXTRA_HEADER DEPENDS EXTERNAL)
+    cmake_parse_arguments(EXE "" "" "${multi_args}" ${ARGN})
+
+    # 添加可执行文件的头文件
+    set(exe_include_dir ${CMAKE_CURRENT_LIST_DIR}/include)
+
+    # 获取 src 目录下的所有源文件
+    set(exe_source_dir ${CMAKE_CURRENT_LIST_DIR}/src)
+    set(exe_sources_src "")
+    aux_source_directory(${exe_source_dir} exe_sources_src)
+
+    set(exe_prefix "VisCore_")
+    set(exe_suffix "_exe")
+    set(target_name "${exe_prefix}${exe_name}${exe_suffix}")
+
+    # main.cpp 路径
+    set(main_cpp_path ${CMAKE_CURRENT_LIST_DIR}/main.cpp)
+
+    # 添加可执行文件
+    add_executable(${target_name} ${main_cpp_path} ${exe_sources_src})
+    # 设置可执行文件的头文件搜索路径
+    target_include_directories(${target_name} PUBLIC ${exe_include_dir} ${EXE_EXTRA_HEADER})
+
+    # 添加依赖
+    foreach(depends_module ${EXE_DEPENDS})
+        target_link_libraries(${target_name} PUBLIC VisCore_${depends_module})
+    endforeach()
+    target_link_libraries(${target_name} PUBLIC ${EXE_EXTERNAL})
+endfunction()
