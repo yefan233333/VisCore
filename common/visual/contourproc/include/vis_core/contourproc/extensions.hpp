@@ -30,7 +30,7 @@ inline void findContours(cv::InputArray image,
     // 将OpenCV的轮廓转换为智能指针类型
     for (auto &&cv_contour : cv_contours)
     {
-        contours.emplace_back(ContourWrapper<int>::Create(std::move(cv_contour)));
+        contours.emplace_back(ContourWrapper<int>::create(std::move(cv_contour)));
     }
 }
 
@@ -61,7 +61,7 @@ inline void findContours(cv::InputArray image,
     contours.reserve(raw_contours.size());
     for (auto &&contour : raw_contours)
     {
-        contours.emplace_back(ContourWrapper<int>::Create(std::move(contour)));
+        contours.emplace_back(ContourWrapper<int>::create(std::move(contour)));
     }
     hierarchy.reserve(raw_contours.size());
     for (size_t i = 0; i < raw_contours.size(); ++i)
@@ -103,7 +103,7 @@ inline void findContours(cv::InputArray image,
     contours.reserve(raw_contours.size());
     for (auto &&contour : raw_contours)
     {
-        contours.emplace_back(ContourWrapper<int>::Create(std::move(contour)));
+        contours.emplace_back(ContourWrapper<int>::create(std::move(contour)));
     }
     hierarchy.reserve(raw_contours.size());
     for (size_t i = 0; i < raw_contours.size(); ++i)
@@ -141,7 +141,7 @@ inline void findContours(cv::InputArray image,
     contours.reserve(raw_contours.size());
     for (auto &&contour : raw_contours)
     {
-        contours.emplace_back(ContourWrapper<int>::Create(std::move(contour)));
+        contours.emplace_back(ContourWrapper<int>::create(std::move(contour)));
     }
 }                         
 

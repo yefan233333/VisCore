@@ -128,24 +128,21 @@ public:
             ConvexHullIndices = 5, //!< 凸包点索引
         };
 
-        cv::Rect bounding_rect;                //!< 包围盒
-        cv::RotatedRect min_area_rect;         //!< 最小面积包围盒
-        CircleType fitted_circle;              //!< 拟合圆
-        cv::RotatedRect fitted_ellipse;        //!< 拟合椭圆
-        std::vector<PointType> convex_hull;    //!< 凸包点集
-        std::vector<int> convex_hull_indices;  //!< 凸包点索引
+        cv::Rect bounding_rect;               //!< 包围盒
+        cv::RotatedRect min_area_rect;        //!< 最小面积包围盒
+        CircleType fitted_circle;             //!< 拟合圆
+        cv::RotatedRect fitted_ellipse;       //!< 拟合椭圆
+        std::vector<PointType> convex_hull;   //!< 凸包点集
+        std::vector<int> convex_hull_indices; //!< 凸包点索引
     };
 
 public:
     //---------------[数据存储区]----------------------
 private:
     std::shared_ptr<const std::vector<PointType>> __points; //!< 轮廓点集
-    mutable std::unique_ptr<SmallCacheBlock> __small_cache;         //!< 小型缓存块
-    mutable std::unique_ptr<LargeCacheBlock> __large_cache;          //!< 大型缓存块
+    mutable std::unique_ptr<SmallCacheBlock> __small_cache; //!< 小型缓存块
+    mutable std::unique_ptr<LargeCacheBlock> __large_cache; //!< 大型缓存块
 
-
-
-    //----------------[接口区]-------------------------
 public:
     /**
      * @brief 构造函数
@@ -176,7 +173,7 @@ public:
             VISCORE_THROW_ERROR("轮廓点集不能为空");
         }
     }
-    
+
     /**
      * @brief 禁用默认构造函数
      */
@@ -227,7 +224,7 @@ public:
           __large_cache(std::move(other.__large_cache))
     {
         // 确保移动后仍然有有效的轮廓点集
-        if(!__points || __points->empty())
+        if (!__points || __points->empty())
         {
             VISCORE_THROW_ERROR("轮廓点集不能为空");
         }
@@ -237,10 +234,12 @@ public:
     }
 
 
+public:
+    //----------------[接口区]-------------------------
     /**
      * @brief 指针构造接口
      */
-    static ContourWrapper_ptr Create(const std::vector<PointType> &points)
+    static ContourWrapper_ptr create(const std::vector<PointType> &points)
     {
         return std::make_shared<ContourWrapper>(points);
     }
@@ -248,7 +247,7 @@ public:
     /**
      * @brief 指针构造接口（移动构造）
      */
-    static ContourWrapper_ptr Create(std::vector<PointType> &&points)
+    static ContourWrapper_ptr create(std::vector<PointType> &&points)
     {
         return std::make_shared<ContourWrapper>(std::move(points));
     }
@@ -256,7 +255,7 @@ public:
     /**
      * @brief 获取点集
      */
-    const auto& points() const
+    const auto &points() const
     {
         return getPoints();
     }
@@ -290,9 +289,9 @@ public:
      */
     auto convexArea() const
     {
-        return calculateConvexAreaImpl();   
+        return calculateConvexAreaImpl();
     }
-    
+
     /**
      * @brief 获取凸包周长
      */
@@ -365,14 +364,13 @@ public:
         return calculateConvexHullIndicesImpl();
     }
 
-
     //----------------[计算实现区]-------------------------
 private:
     /**
      * @brief 生成小型缓存块
      * @return std::unique_ptr<SmallCacheBlock> 返回生成的小型缓存块
      */
-    auto generateSmallCache() const 
+    auto generateSmallCache() const
     {
         auto cache = std::make_unique<SmallCacheBlock>();
         cache->clearAllCached(); // 清除所有缓存状态
@@ -738,7 +736,6 @@ private:
         }
         return __large_cache->convex_hull_indices;
     }
-
 };
 
 using ContourI_ptr = std::shared_ptr<ContourWrapper<int>>;

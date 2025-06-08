@@ -1,4 +1,4 @@
 
 VisCore_add_exe(test_1
-    DEPENDS property_wrapper contour_wrapper
+    DEPENDS property_wrapper contour_proc img_proc
 )

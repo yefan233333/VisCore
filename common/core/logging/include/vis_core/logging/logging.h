@@ -76,5 +76,3 @@
         snprintf(_msg_ + strlen(_msg_), sizeof(_msg_) - strlen(_msg_), msg);        \
         throw std::runtime_error(_msg_);                                            \
     } while (false)
-
-    
