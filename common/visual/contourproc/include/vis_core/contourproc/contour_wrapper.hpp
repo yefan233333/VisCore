@@ -38,6 +38,8 @@ public:
 
     using CircleType = std::tuple<KeyPointType, KeyType>; //!< 圆类型，包含圆心和半径
 
+    using ContourWrapper_ptr = std::shared_ptr<ContourWrapper<ValueType>>; //!< 轮廓包装器智能指针类型
+
     friend class std::allocator<ContourWrapper<ValueType>>;
 
 private:
@@ -141,6 +143,8 @@ private:
     mutable std::unique_ptr<SmallCacheBlock> __small_cache;         //!< 小型缓存块
     mutable std::unique_ptr<LargeCacheBlock> __large_cache;          //!< 大型缓存块
 
+
+
     //----------------[接口区]-------------------------
 public:
     /**
@@ -232,8 +236,138 @@ public:
         other.__large_cache = nullptr;
     }
 
+
+    /**
+     * @brief 指针构造接口
+     */
+    static ContourWrapper_ptr Create(const std::vector<PointType> &points)
+    {
+        return std::make_shared<ContourWrapper>(points);
+    }
+
+    /**
+     * @brief 指针构造接口（移动构造）
+     */
+    static ContourWrapper_ptr Create(std::vector<PointType> &&points)
+    {
+        return std::make_shared<ContourWrapper>(std::move(points));
+    }
+
+    /**
+     * @brief 获取点集
+     */
+    const auto& points() const
+    {
+        return getPoints();
+    }
+
+    /**
+     * @brief 获取面积
+     */
+    auto area() const
+    {
+        return calculateAreaImpl();
+    }
+
+    /**
+     * @brief 获取轮廓周长
+     * @param[in] closed 是否闭合轮廓
+     */
+    auto perimeter(bool closed = true) const
+    {
+        if (closed)
+        {
+            return calculatePerimeterCloseImpl();
+        }
+        else
+        {
+            return calculatePerimeterOpenImpl();
+        }
+    }
+
+    /**
+     * @brief 获取凸包面积
+     */
+    auto convexArea() const
+    {
+        return calculateConvexAreaImpl();   
+    }
+    
+    /**
+     * @brief 获取凸包周长
+     */
+    auto convexPerimeter() const
+    {
+        return calculateConvexPerimeterImpl();
+    }
+
+    /**
+     * @brief 获取圆度
+     */
+    auto circularity() const
+    {
+        return calculateCircularityImpl();
+    }
+
+    /**
+     * @brief 获取质心
+     */
+    auto center() const
+    {
+        return calculateCenterImpl();
+    }
+
+    /**
+     * @brief 获取包围盒
+     */
+    auto boundingRect() const
+    {
+        return calculateBoundingRectImpl();
+    }
+
+    /**
+     * @brief 获取最小面积包围盒
+     */
+    auto minAreaRect() const
+    {
+        return calculateMinAreaRectImpl();
+    }
+
+    /**
+     * @brief 获取拟合圆
+     */
+    auto fittedCircle() const
+    {
+        return calculateFittedCircleImpl();
+    }
+
+    /**
+     * @brief 获取拟合椭圆
+     */
+    auto fittedEllipse() const
+    {
+        return calculateFittedEllipseImpl();
+    }
+
+    /**
+     * @brief 获取凸包点集
+     */
+    const auto &convexHull() const
+    {
+        return calculateConvexHullImpl();
+    }
+
+    /**
+     * @brief 获取凸包点索引
+     */
+    const auto &convexHullIndices() const
+    {
+        return calculateConvexHullIndicesImpl();
+    }
+
+
     //----------------[计算实现区]-------------------------
-public:
+private:
     /**
      * @brief 生成小型缓存块
      * @return std::unique_ptr<SmallCacheBlock> 返回生成的小型缓存块
@@ -606,3 +740,9 @@ public:
     }
 
 };
+
+using ContourI_ptr = std::shared_ptr<ContourWrapper<int>>;
+using ContourF_ptr = std::shared_ptr<ContourWrapper<float>>;
+using ContourD_ptr = std::shared_ptr<ContourWrapper<double>>;
+
+using Contour_ptr = ContourI_ptr; //!< 默认轮廓类型为int
