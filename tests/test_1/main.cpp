@@ -2,6 +2,7 @@
 
 
 #include "vis_core/geom_utils/geometry.h"
+#include "vis_core/contour_proc/contour_wrapper.hpp"
 
 // 定义绘制颜色常量
 const cv::Scalar RED(0, 0, 255);

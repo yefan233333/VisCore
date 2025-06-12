@@ -234,4 +234,26 @@ namespace geom_utils_concepts
                           "Unsupported type for get_z (must be 3D vector)");
         }
     }
+
+    /**
+     * @brief 将任意3d向量转换为cv::Matx<Tp, 3, 1>类型
+     * 
+     * @tparam Tp 目标数据类型
+     * @tparam T 输入向量类型（需满足vector_3_type）
+     * 
+     * @param v 输入向量实例
+     * 
+     * @return 返回转换后的cv::Matx<Tp, 3, 1>类型
+     * 
+     * @note 使用示例：
+     *      cv::Vec3d vec(1.0, 2.0, 3.0);
+     *      auto matx = cvtMatx3<double>(vec);
+     */
+    template <typename Tp, typename T>
+        requires vector_3_type<T> // 模板参数约束
+    constexpr auto cvtMatx3(const T &v) noexcept
+    {
+        return cv::Matx<Tp, 3, 1>(get_x(v), get_y(v), get_z(v));
+    }
+
 } // namespace geom_utils_concepts

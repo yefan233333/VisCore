@@ -1,1 +1,0 @@
-#include "vis_core/contourproc/contour_wrapper.hpp"

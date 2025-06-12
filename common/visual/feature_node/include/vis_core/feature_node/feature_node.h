@@ -2,8 +2,8 @@
 
 #include <opencv2/core.hpp>
 #include <memory>
-#include "vis_core/contourproc/contour_wrapper.hpp"
-#include "vis_core/imgproc/image_wrapper.hpp"
+#include "vis_core/contour_proc/contour_wrapper.hpp"
+#include "vis_core/img_proc/image_wrapper.hpp"
 
 /**
  * @brief 特征节点
