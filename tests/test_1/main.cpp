@@ -1,9 +1,7 @@
 #include <opencv2/opencv.hpp>
 
 
-#include"vis_core/geom_utils/geom_line.hpp"
-#include"vis_core/geom_utils/geom_circle.hpp"
-#include"vis_core/geom_utils/geom_segment.hpp"
+#include "vis_core/geom_utils/geometry.h"
 
 // 定义绘制颜色常量
 const cv::Scalar RED(0, 0, 255);

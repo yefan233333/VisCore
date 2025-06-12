@@ -1,6 +1,5 @@
 #pragma once
 
-#include "vis_core/geom_utils/geometry.h"
 #include <opencv2/core.hpp>
 #include <cmath>
 #include <utility>

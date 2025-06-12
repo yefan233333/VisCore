@@ -1,6 +1,5 @@
 #pragma once
 
-#include "geometry.h"
 #include <opencv2/core.hpp>
 #include <cmath>
 #include <utility>
