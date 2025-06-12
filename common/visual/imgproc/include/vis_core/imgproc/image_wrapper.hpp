@@ -17,6 +17,7 @@ class ImageWrapper
 {
 public:
     // ---------------[ 类型定义区 ]-------------------------
+    using Ptr = std::shared_ptr<ImageWrapper>; //!< 图像包装器智能指针类型
     using ProcImgKey = std::string; //!< 处理图像映射的键类型
     using ContourGroupKey = std::string; //!< 轮廓组映射的键类型
     using ContourGroup = std::vector<Contour_ptr>; //!< 轮廓组类型，存储多个轮廓指针
@@ -54,8 +55,6 @@ public:
         }        
     }
 
-
-
 public:
     // -----------------[ 接口区 ]-------------------------
 
@@ -64,9 +63,9 @@ public:
      *
      * @param[in] source_img 源图像
      */
-    static ImageWrapper create(const cv::Mat &source_img)
+    static Ptr create(const cv::Mat &source_img)
     {
-        return ImageWrapper(source_img);
+        return std::make_shared<ImageWrapper>(source_img);
     }
 
     /**
@@ -74,9 +73,9 @@ public:
      *
      * @param[in] source_img 源图像
      */
-    static ImageWrapper create(cv::Mat &&source_img)
+    static Ptr create(cv::Mat &&source_img)
     {
-        return ImageWrapper(std::move(source_img));
+        return std::make_shared<ImageWrapper>(std::move(source_img));
     }
 
     /**
@@ -284,3 +283,6 @@ private:
     std::unordered_map<ProcImgKey, cv::Mat> __processed_image_map;                 //!< 处理过的图像
     std::unordered_map<ContourGroupKey, ContourGroup> __contour_group_map;         //!< 轮廓组
 };
+
+using ImageWrapperPtr = std::shared_ptr<ImageWrapper>; //!< 图像包装器指针类型
+using ImgPtr = ImageWrapperPtr; //!< 图像包装器智能指针类型别名
