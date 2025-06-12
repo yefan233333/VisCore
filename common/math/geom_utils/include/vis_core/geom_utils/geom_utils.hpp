@@ -99,7 +99,7 @@ inline cv::Vec<Tp, 3> matx2vec(cv::Matx<Tp, 3, 1> matx) { return cv::Vec<Tp, 3>(
  */
 template <geom_utils_concepts::vector_2_type Vec1,
           geom_utils_concepts::vector_2_type Vec2>
-inline auto calcDist(const Vec1 &v1, const Vec2 &v2) noexcept
+inline auto getDist(const Vec1 &v1, const Vec2 &v2) noexcept
 {
     using namespace geom_utils_concepts;
     const auto dx = get_x(v1) - get_x(v2);
@@ -109,14 +109,14 @@ inline auto calcDist(const Vec1 &v1, const Vec2 &v2) noexcept
 
 /**
  * @brief 计算三维向量之间的欧氏距离
- * 
+ *
  * @param v1 第一个三维向量
  * @param v2 第二个三维向量
  * @return 两个三维向量之间的距离
  */
 template <geom_utils_concepts::vector_3_type Vec1,
           geom_utils_concepts::vector_3_type Vec2>
-inline auto calcDist(const Vec1 &v1, const Vec2 &v2) noexcept
+inline auto getDist(const Vec1 &v1, const Vec2 &v2) noexcept
 {
     using namespace geom_utils_concepts;
     const auto dx = get_x(v1) - get_x(v2);
@@ -124,3 +124,24 @@ inline auto calcDist(const Vec1 &v1, const Vec2 &v2) noexcept
     const auto dz = get_z(v1) - get_z(v2);
     return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
+
+/**
+ * @brief 平面向量外积计算
+ * 
+ * @param v1 第一个向量
+ * @param v2 第二个向量
+ * @return 外积结果 , 若 retval = 0,则共线
+ */
+template <geom_utils_concepts::vector_2_type Vec1,
+          geom_utils_concepts::vector_2_type Vec2>
+inline auto getCross(const Vec1 &v1, const Vec2 &v2) noexcept
+{
+    using namespace geom_utils_concepts;
+    const auto v1_x = get_x(v1);
+    const auto v1_y = get_y(v1);
+    const auto v2_x = get_x(v2);
+    const auto v2_y = get_y(v2);
+    return v1_x * v2_y - v1_y * v2_x; // 返回外积结果
+}
+
+
