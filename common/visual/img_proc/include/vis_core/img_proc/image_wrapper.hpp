@@ -6,8 +6,7 @@
 #include<string>
 
 #include"vis_core/logging/logging.h"
-#include"vis_core/property_wrapper/property_wrapper.hpp"
-#include"vis_core/contour_proc/contour_wrapper.hpp"
+#include "vis_core/contour_proc/contour_proc.h"
 
 /**
  * @class ImageWrapper

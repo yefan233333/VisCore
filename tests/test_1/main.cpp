@@ -3,6 +3,9 @@
 
 #include "vis_core/geom_utils/geometry.h"
 #include "vis_core/contour_proc/contour_wrapper.hpp"
+#include "vis_core/img_proc/image_wrapper.hpp"
+#include "vis_core/feature_node/feature_node.h"
+#include "vis_core/pose_proc/transform6D.hpp"
 
 // 定义绘制颜色常量
 const cv::Scalar RED(0, 0, 255);
@@ -25,6 +28,7 @@ cv::Point2f cvPoint(const cv::Point2f &p)
  */
 void testLine(cv::Mat &canvas)
 {
+
     // 创建直线
     Line2f l1(0, cv::Point2f(100, 100));                     // 0°水平线
     Line2f l2(CV_PI / 2, cv::Point2f(200, 200));             // 90°垂直线
@@ -240,8 +244,23 @@ void testCombined(cv::Mat &canvas)
     putText(canvas, text, cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.7, WHITE, 1);
 }
 
+/**
+ * @brief 去除常量和引用限定的旋转矩阵类型概念
+ */
+template <typename T>
+using base_type = std::remove_cvref_t<T>;
+
 int main()
 {
+
+    FeatureNode f1;
+    
+    Transform6D t1;
+    cv::Matx33d rmat = cv::Matx33d::eye();
+    cv::Matx31d tvec(0, 0, 0);
+
+    Transform6D t2(rmat, tvec);
+
     // 创建窗口
     const char *winName = "Geometry Tests";
     cv::namedWindow(winName, cv::WINDOW_AUTOSIZE);

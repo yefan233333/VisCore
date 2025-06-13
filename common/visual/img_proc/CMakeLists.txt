@@ -1,5 +1,6 @@
-# Contour Wrapper CMakeLists.txt
+# img_proc CMakeLists.txt
 
 VisCore_add_module(img_proc
 INTERFACE
-DEPENDS logging)
+DEPENDS logging contour_proc
+)

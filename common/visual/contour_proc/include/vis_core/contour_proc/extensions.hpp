@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include "contour_wrapper.hpp"
 #include <array>
 /**

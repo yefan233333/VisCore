@@ -3,5 +3,5 @@
 
 
 VisCore_add_module(pose_proc
-INTERFACE 
+# INTERFACE 
 DEPENDS logging geom_utils)

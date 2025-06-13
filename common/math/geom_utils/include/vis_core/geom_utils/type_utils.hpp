@@ -9,16 +9,18 @@ namespace geom_utils_concepts
     /**
      * @brief 去除const限定和引用限定
      */
-    template<typename T>
+    template <typename T>
     using base_type = std::remove_cvref_t<T>;
 
     /**
      * @brief 常用算术类型概念
      */
     template <typename T>
-    concept vctor_arithmetic = std::is_arithmetic_v<base_type<T>> && (std::is_same_v<base_type<T>, int> ||
-                                                                         std::is_same_v<base_type<T>, float> ||
-                                                                         std::is_same_v<base_type<T>, double>);
+    concept vector_arithmetic = std::is_arithmetic_v<base_type<T>> && (std::is_same_v<base_type<T>, int> ||
+                                                                       std::is_same_v<base_type<T>, float> ||
+                                                                       std::is_same_v<base_type<T>, double>);
+
+    // ---------------------------【二维向量】---------------------------
 
     /**
      * @brief 二维向量类型概念_1
@@ -27,8 +29,8 @@ namespace geom_utils_concepts
     concept vector_2_type_sub_1 = requires(T a) {
         a.x;
         a.y;
-        requires(vctor_arithmetic<decltype(a.x)>);
-        requires(vctor_arithmetic<decltype(a.y)>);
+        requires(vector_arithmetic<decltype(a.x)>);
+        requires(vector_arithmetic<decltype(a.y)>);
     } && !requires(T a) {
         a.z; // 确保没有 z 成员
     };
@@ -41,8 +43,8 @@ namespace geom_utils_concepts
         // 可以访问 (0,0)(0,1)
         a(0, 0);
         a(0, 1);
-        requires(vctor_arithmetic<decltype(a(0, 0))>);
-        requires(vctor_arithmetic<decltype(a(0, 1))>);
+        requires(vector_arithmetic<decltype(a(0, 0))>);
+        requires(vector_arithmetic<decltype(a(0, 1))>);
         requires(T::rows == 1 && T::cols == 2); // 确保是二维向量
     };
 
@@ -54,8 +56,8 @@ namespace geom_utils_concepts
         // 可以访问 (0,0)(1,0)
         a(0, 0);
         a(1, 0);
-        requires(vctor_arithmetic<decltype(a(0, 0))>);
-        requires(vctor_arithmetic<decltype(a(1, 0))>);
+        requires(vector_arithmetic<decltype(a(0, 0))>);
+        requires(vector_arithmetic<decltype(a(1, 0))>);
         requires(T::rows == 2 && T::cols == 1); // 确保是二维向量
     };
 
@@ -66,7 +68,7 @@ namespace geom_utils_concepts
     concept vector_2_type_sub_4 = requires(T a) {
         // 为cv::Vec<U, 2>类型,并且U为基本算术类型
         requires(std::is_same_v<T, cv::Vec<typename T::value_type, 2>>);
-        requires(vctor_arithmetic<typename T::value_type>);
+        requires(vector_arithmetic<typename T::value_type>);
     };
 
     /**
@@ -74,6 +76,8 @@ namespace geom_utils_concepts
      */
     template <typename T>
     concept vector_2_type = vector_2_type_sub_1<T> || vector_2_type_sub_2<T> || vector_2_type_sub_3<T> || vector_2_type_sub_4<T>;
+
+    // ---------------------------【三维向量】---------------------------
 
     /**
      * @brief 三维向量类型概念_1
@@ -83,9 +87,9 @@ namespace geom_utils_concepts
         a.x;
         a.y;
         a.z;
-        requires vctor_arithmetic<decltype(a.x)>;
-        requires vctor_arithmetic<decltype(a.y)>;
-        requires vctor_arithmetic<decltype(a.z)>;
+        requires vector_arithmetic<decltype(a.x)>;
+        requires vector_arithmetic<decltype(a.y)>;
+        requires vector_arithmetic<decltype(a.z)>;
     };
 
     template <typename T>
@@ -93,9 +97,9 @@ namespace geom_utils_concepts
         a(0, 0);
         a(0, 1);
         a(0, 2);
-        requires vctor_arithmetic<decltype(a(0, 0))>;
-        requires vctor_arithmetic<decltype(a(0, 1))>;
-        requires vctor_arithmetic<decltype(a(0, 2))>;
+        requires vector_arithmetic<decltype(a(0, 0))>;
+        requires vector_arithmetic<decltype(a(0, 1))>;
+        requires vector_arithmetic<decltype(a(0, 2))>;
         requires(T::rows == 1 && T::cols == 3);
     };
 
@@ -104,16 +108,16 @@ namespace geom_utils_concepts
         a(0, 0);
         a(1, 0);
         a(2, 0);
-        requires vctor_arithmetic<decltype(a(0, 0))>;
-        requires vctor_arithmetic<decltype(a(1, 0))>;
-        requires vctor_arithmetic<decltype(a(2, 0))>;
+        requires vector_arithmetic<decltype(a(0, 0))>;
+        requires vector_arithmetic<decltype(a(1, 0))>;
+        requires vector_arithmetic<decltype(a(2, 0))>;
         requires(T::rows == 3 && T::cols == 1);
     };
 
     template <typename T>
     concept vector_3_type_sub_4 = requires {
         requires std::is_same_v<T, cv::Vec<typename T::value_type, 3>>;
-        requires vctor_arithmetic<typename T::value_type>;
+        requires vector_arithmetic<typename T::value_type>;
     };
 
     template <typename T>
@@ -237,14 +241,14 @@ namespace geom_utils_concepts
 
     /**
      * @brief 将任意3d向量转换为cv::Matx<Tp, 3, 1>类型
-     * 
+     *
      * @tparam Tp 目标数据类型
      * @tparam T 输入向量类型（需满足vector_3_type）
-     * 
+     *
      * @param v 输入向量实例
-     * 
+     *
      * @return 返回转换后的cv::Matx<Tp, 3, 1>类型
-     * 
+     *
      * @note 使用示例：
      *      cv::Vec3d vec(1.0, 2.0, 3.0);
      *      auto matx = cvtMatx3<double>(vec);
