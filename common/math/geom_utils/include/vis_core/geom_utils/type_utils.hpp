@@ -255,7 +255,7 @@ namespace geom_utils_concepts
      */
     template <typename Tp, typename T>
         requires vector_3_type<T> // 模板参数约束
-    constexpr auto cvtMatx3(const T &v) noexcept
+    constexpr auto cvtMatx31(const T &v) noexcept
     {
         return cv::Matx<Tp, 3, 1>(get_x(v), get_y(v), get_z(v));
     }

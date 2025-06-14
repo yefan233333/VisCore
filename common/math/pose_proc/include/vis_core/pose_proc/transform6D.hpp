@@ -1,6 +1,7 @@
 #pragma once
 
 #include <opencv2/core.hpp>
+#include <opencv2/calib3d.hpp>
 #include <memory>
 
 #include "vis_core/geom_utils/type_utils.hpp"
@@ -17,14 +18,21 @@ namespace transform6D_concepts
     /**
      * @brief 旋转矩阵类型概念
      * @tparam T 旋转矩阵类型
-     * 
-     * @note 要求 T 为 cv::Matx<Tp, 3, 3> 
+     *
+     * @note 要求 T 为 cv::Matx<Tp, 3, 3>
      */
     template <typename T>
     concept rmat_type = requires(T a) {
-        requires std::is_same_v<base_type<T>, cv::Matx<typename T::value_type, 3, 3>>;    // 要求 T 的 value_type 为三维向量类型
-        requires geom_utils_concepts::vector_arithmetic<typename T::value_type>; // 要求 value_type 是算术类型
+        requires std::is_same_v<base_type<T>, cv::Matx<typename T::value_type, 3, 3>>;
+        requires geom_utils_concepts::vector_arithmetic<typename T::value_type>;
     };
+
+    /**
+     * @brief 旋转向量类型概念
+     * @tparam T 旋转向量类型
+     */
+    template <typename T>
+    concept rvec_type = geom_utils_concepts::vector_3_type<T>;
 
     /**
      * @brief 平移向量类型概念
@@ -33,6 +41,105 @@ namespace transform6D_concepts
     template <typename T>
     concept tvec_type = geom_utils_concepts::vector_3_type<T>;
 }
+
+class Transform6D
+{
+public:
+    //! 旋转矩阵存储类型
+    using RmatType = cv::Matx33d;
+    //! 旋转向量存储类型
+    using RvecType = cv::Matx31d;
+    //! 平移向量存储类型
+    using TvecType = cv::Matx31d;
+
+    /**
+     * @brief 默认构造函数
+     */
+    Transform6D();
+
+    Transform6D(const Transform6D &other) = default;            
+    Transform6D(Transform6D &&other) = default;                 
+    Transform6D &operator=(const Transform6D &other) = default; 
+    Transform6D &operator=(Transform6D &&other) = default;      
+    ~Transform6D() = default;                                 
+
+
+    /**
+     * @brief 构造函数
+     * @param rmat 旋转矩阵
+     * @param tvec 平移向量
+     */
+    template <transform6D_concepts::rmat_type T, transform6D_concepts::tvec_type U>
+    Transform6D(const T &rmat, const U &tvec);
+
+
+    /**
+     * @brief 构造函数
+     * @param rvec 旋转向量
+     * @param tvec 平移向量
+     */
+    template <transform6D_concepts::rvec_type T, transform6D_concepts::tvec_type U>
+    Transform6D(const T &rvec, const U &tvec);
+
+    /**
+     * @brief 获取旋转矩阵
+     * @return 返回旋转矩阵
+     */
+    const RmatType &rmat() const noexcept;
+
+    /**
+     * @brief 获取平移向量
+     * @return 返回平移向量
+     */
+    const TvecType &tvec() const noexcept;
+
+    /**
+     * @brief 获取旋转向量
+     * @return 返回旋转向量
+     */
+    const RvecType &rvec() const noexcept;
+
+    /**
+     * @brief 设置 rmat
+     *
+     * @param rmat 旋转矩阵
+     * @return Transform6D& 返回当前对象的引用
+     */
+    template <transform6D_concepts::rmat_type T>
+    void rmat(const T &rmat) noexcept;
+
+    /**
+     * @brief 设置 rvec
+     *
+     * @param rvec 旋转向量
+     * @return Transform6D& 返回当前对象的引用
+     */
+    template <transform6D_concepts::rvec_type T>
+    void rvec(const T &rvec) noexcept;
+
+    /**
+     * @brief 设置 tvec
+     *
+     * @param tvec 平移向量
+     * @return Transform6D& 返回当前对象的引用
+     */
+    template <transform6D_concepts::tvec_type T>
+    void tvec(const T &tvec) noexcept;
+
+private:
+    // 确保旋转矩阵有效（延迟初始化）
+    void ensureRmatInitialized() const;
+
+    // 确保旋转向量有效（延迟初始化）
+    void ensureRvecInitialized() const;
+
+    mutable RmatType __rmat; //!< 旋转矩阵
+    mutable RvecType __rvec; //!< 旋转向量
+    TvecType __tvec;         //!< 平移向量
+
+    mutable bool __rmat_initialized = false; //!< 旋转矩阵初始化标记
+    mutable bool __rvec_initialized = false; //!< 旋转向量初始化标记
+};
 
 //! Transform6D 类的辅助函数
 namespace transform6D_utils
@@ -44,7 +151,16 @@ namespace transform6D_utils
      * @return 返回转换后的旋转矩阵
      */
     template <transform6D_concepts::rmat_type T>
-    cv::Matx33d convertRMat(const T &rmat);
+    Transform6D::RmatType convertRmat(const T &rmat);
+
+    /**
+     * @brief 将旋转向量转换为 Transform6D 所需的旋转矩阵类型
+     * @tparam T 旋转向量类型
+     * @param rvec 输入的旋转向量
+     * @return 返回转换后的旋转矩阵
+     */
+    template <transform6D_concepts::rvec_type T>
+    Transform6D::RvecType convertRvec(const T &rvec);
 
     /**
      * @brief 将平移向量转换为 Transform6D 所需的平移向量类型
@@ -53,63 +169,215 @@ namespace transform6D_utils
      * @return 返回转换后的平移向量
      */
     template <transform6D_concepts::tvec_type T>
-    cv::Matx31d convertTVec(const T &tvec);
+    Transform6D::TvecType convertTvec(const T &tvec);
+
+    /**
+     * @brief 将旋转向量转换为 Transform6D 所需的旋转矩阵类型
+     * @param rvec 输入的旋转向量
+     * @return 返回转换后的旋转矩阵
+     */
+    Transform6D::RmatType convertRmat(const cv::Matx<Transform6D::RmatType::value_type, 3, 1> &rvec);
 }
 
-class Transform6D
+// 默认构造函数
+Transform6D::Transform6D()
+    : __tvec(TvecType::zeros())
 {
-public:
-    //! 旋转矩阵存储类型
-    using RmatType = cv::Matx33d;
-    //! 平移向量存储类型
-    using TvecType = cv::Matx31d;
+    // 默认构造时不初始化旋转矩阵和旋转向量
+}
 
-    /**
-     * @brief 默认构造函数
-     */
-    Transform6D();
-
-    /**
-     * @brief 构造函数
-     * @param rmat 旋转矩阵
-     * @param tvec 平移向量
-     */
-    template<transform6D_concepts::rmat_type T, transform6D_concepts::tvec_type U>
-    Transform6D(const T &rmat, const U &tvec);
-
-
-private:
-    RmatType __rmat;  //!< 旋转矩阵
-    TvecType __tvec;  //!< 平移向量
-
-};
-
-
-
-
+// 使用旋转矩阵和平移向量构造
 template <transform6D_concepts::rmat_type T, transform6D_concepts::tvec_type U>
 Transform6D::Transform6D(const T &rmat, const U &tvec)
-    : __rmat(transform6D_utils::convertRMat(rmat)), __tvec(transform6D_utils::convertTVec(tvec))
+    : __rmat(transform6D_utils::convertRmat(rmat)),
+      __tvec(transform6D_utils::convertTvec(tvec)),
+      __rmat_initialized(true),
+      __rvec_initialized(false)
 {
+    // 旋转矩阵已初始化，旋转向量未初始化
 }
 
-Transform6D::Transform6D()
-    : __rmat(RmatType::eye()), __tvec(TvecType::zeros())
+// 使用旋转向量和平移向量构造
+template <transform6D_concepts::rvec_type T, transform6D_concepts::tvec_type U>
+Transform6D::Transform6D(const T &rvec, const U &tvec)
+    : __rvec(transform6D_utils::convertRvec(rvec)),
+      __tvec(transform6D_utils::convertTvec(tvec)),
+      __rvec_initialized(true),
+      __rmat_initialized(false)
 {
+    // 旋转向量已初始化，旋转矩阵未初始化
+}
+
+// 确保旋转矩阵有效
+void Transform6D::ensureRmatInitialized() const
+{
+    if (!__rmat_initialized)
+    {
+        if (__rvec_initialized)
+        {
+            // 从旋转向量计算旋转矩阵
+            cv::Rodrigues(__rvec, __rmat);
+        }
+        else
+        {
+            // 默认单位矩阵
+            __rmat = RmatType::eye();
+        }
+        __rmat_initialized = true;
+    }
+}
+
+// 确保旋转向量有效
+void Transform6D::ensureRvecInitialized() const
+{
+    if (!__rvec_initialized)
+    {
+        if (__rmat_initialized)
+        {
+            // 从旋转矩阵计算旋转向量
+            cv::Rodrigues(__rmat, __rvec);
+        }
+        else
+        {
+            // 默认零向量
+            __rvec = RvecType::zeros();
+        }
+        __rvec_initialized = true;
+    }
+}
+
+const Transform6D::RmatType &Transform6D::rmat() const noexcept
+{
+    ensureRmatInitialized();
+    return __rmat;
+}
+
+const Transform6D::TvecType &Transform6D::tvec() const noexcept
+{
+    return __tvec;
+}
+
+const Transform6D::RvecType &Transform6D::rvec() const noexcept
+{
+    ensureRvecInitialized();
+    return __rvec;
+}
+
+template <transform6D_concepts::rmat_type T>
+void Transform6D::rmat(const T &rmat) noexcept
+{
+    __rmat = transform6D_utils::convertRmat(rmat);
+    __rmat_initialized = true;
+    __rvec_initialized = false; // 旋转向量未初始化
+}
+
+template <transform6D_concepts::rvec_type T>
+void Transform6D::rvec(const T &rvec) noexcept
+{
+    __rvec = transform6D_utils::convertRvec(rvec);
+    __rvec_initialized = true;
+    __rmat_initialized = false; // 旋转矩阵未初始化
+}
+
+template <transform6D_concepts::tvec_type T>
+void Transform6D::tvec(const T &tvec) noexcept
+{
+    __tvec = transform6D_utils::convertTvec(tvec);
+}
+
+/**
+ * @brief Transform6D 加法操作
+ * @param A_to_B A到B的变换
+ * @param B_to_C B到C的变换
+ * @return A_to_C A到C的变换
+ */
+inline Transform6D operator+(const Transform6D &A_to_B, const Transform6D &B_to_C)
+{
+    // 计算新的旋转矩阵和平移向量
+    const Transform6D::RmatType new_rmat = A_to_B.rmat() * B_to_C.rmat();
+    const Transform6D::TvecType new_tvec = A_to_B.rmat() * B_to_C.tvec() + A_to_B.tvec();
+
+    return Transform6D(new_rmat, new_tvec);
+}
+
+/**
+ * @brief Transform6D 减法操作
+ * @param A_to_C A到C的变换
+ * @param B_to_C B到C的变换
+ * @return A_to_B A到B的变换
+ */
+inline Transform6D operator-(const Transform6D &A_to_C, const Transform6D &B_to_C)
+{
+    const auto C_to_B_rmat = B_to_C.rmat().t();            // B到C的逆变换
+    const auto C_to_B_tvec = -C_to_B_rmat * B_to_C.tvec(); // B到C的逆平移向量
+    // 计算新的旋转矩阵和平移向量
+    const Transform6D::RmatType new_rmat = A_to_C.rmat() * C_to_B_rmat;
+    const Transform6D::TvecType new_tvec = A_to_C.rmat() * C_to_B_tvec + A_to_C.tvec();
+
+    return Transform6D(new_rmat, new_tvec);
+}
+
+/**
+ * @brief Transform6D 叠加操作
+ * @param A_to_B A到B的变换
+ * @param B_to_C B到C的变换
+ * @return A_to_C A到C的变换
+ */
+inline Transform6D &operator+=(Transform6D &A_to_B, const Transform6D &B_to_C)
+{
+    // 计算新的旋转矩阵和平移向量
+    const Transform6D::RmatType new_rmat = A_to_B.rmat() * B_to_C.rmat();
+    const Transform6D::TvecType new_tvec = A_to_B.rmat() * B_to_C.tvec() + A_to_B.tvec();
+
+    A_to_B.rmat(new_rmat);
+    A_to_B.tvec(new_tvec);
+    return A_to_B;
+}
+
+/**
+ * @brief Transform6D 减法赋值操作
+ * @param A_to_C A到C的变换
+ * @param B_to_C B到C的变换
+ * @return A_to_B A到B的变换
+ */
+inline Transform6D &operator-=(Transform6D &A_to_C, const Transform6D &B_to_C)
+{
+    // 计算新的旋转矩阵和平移向量
+    const auto C_to_B_rmat = B_to_C.rmat().t();            // B到C的逆变换
+    const auto C_to_B_tvec = -C_to_B_rmat * B_to_C.tvec(); // B到C的逆平移向量
+    const Transform6D::RmatType new_rmat = A_to_C.rmat() * C_to_B_rmat;
+    const Transform6D::TvecType new_tvec = A_to_C.rmat() * C_to_B_tvec + A_to_C.tvec();
+    A_to_C.rmat(new_rmat);
+    A_to_C.tvec(new_tvec);
+
+    return A_to_C;
 }
 
 namespace transform6D_utils
 {
     // ---------------【转换函数实现】----------------
     template <transform6D_concepts::rmat_type T>
-    inline Transform6D::RmatType convertRMat(const T &rmat)
+    inline Transform6D::RmatType convertRmat(const T &rmat)
     {
         return static_cast<Transform6D::RmatType>(rmat);
     }
 
-    template <transform6D_concepts::tvec_type T>
-    inline Transform6D::TvecType convertTVec(const T &tvec)
+    template <transform6D_concepts::rvec_type T>
+    inline Transform6D::RvecType convertRvec(const T &rvec)
     {
-        return geom_utils_concepts::cvtMatx3<Transform6D::TvecType::value_type>(tvec);
+        return geom_utils_concepts::cvtMatx31<Transform6D::RvecType::value_type>(rvec);
+    }
+
+    template <transform6D_concepts::tvec_type T>
+    inline Transform6D::TvecType convertTvec(const T &tvec)
+    {
+        return geom_utils_concepts::cvtMatx31<Transform6D::TvecType::value_type>(tvec);
+    }
+
+    inline Transform6D::RmatType convertRmat(const cv::Matx<Transform6D::RvecType::value_type, 3, 1> &rvec)
+    {
+        auto rmat = Transform6D::RmatType::eye();
+        cv::Rodrigues(rvec, rmat);
+        return rmat;
     }
 }

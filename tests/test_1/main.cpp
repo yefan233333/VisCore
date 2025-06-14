@@ -261,6 +261,9 @@ int main()
 
     Transform6D t2(rmat, tvec);
 
+    Transform6D t3(cv::Vec3d(0, 0, 0), cv::Vec3f(1, 0, 0));
+
+
     // 创建窗口
     const char *winName = "Geometry Tests";
     cv::namedWindow(winName, cv::WINDOW_AUTOSIZE);
