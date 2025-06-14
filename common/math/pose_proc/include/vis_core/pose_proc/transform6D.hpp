@@ -48,9 +48,9 @@ public:
     //! 旋转矩阵存储类型
     using RmatType = cv::Matx33d;
     //! 旋转向量存储类型
-    using RvecType = cv::Matx31d;
+    using RvecType = cv::Vec3d;
     //! 平移向量存储类型
-    using TvecType = cv::Matx31d;
+    using TvecType = cv::Vec3d;
 
     /**
      * @brief 默认构造函数
@@ -365,13 +365,13 @@ namespace transform6D_utils
     template <transform6D_concepts::rvec_type T>
     inline Transform6D::RvecType convertRvec(const T &rvec)
     {
-        return geom_utils_concepts::cvtMatx31<Transform6D::RvecType::value_type>(rvec);
+        return geom_utils_concepts::convert3d<Transform6D::RvecType>(rvec);
     }
 
     template <transform6D_concepts::tvec_type T>
     inline Transform6D::TvecType convertTvec(const T &tvec)
     {
-        return geom_utils_concepts::cvtMatx31<Transform6D::TvecType::value_type>(tvec);
+        return geom_utils_concepts::convert3d<Transform6D::TvecType>(tvec);
     }
 
     inline Transform6D::RmatType convertRmat(const cv::Matx<Transform6D::RvecType::value_type, 3, 1> &rvec)

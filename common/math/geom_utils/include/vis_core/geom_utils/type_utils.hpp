@@ -260,4 +260,48 @@ namespace geom_utils_concepts
         return cv::Matx<Tp, 3, 1>(get_x(v), get_y(v), get_z(v));
     }
 
+    /**
+     * @brief 将任意3d向量转化为cv::Vec<Tp, 3>类型
+     * 
+     * @param Tp 目标数据类型
+     * @param T 输入向量类型（需满足vector_3_type）
+     * 
+     * @return 返回转换后的cv::Vec<Tp, 3>类型
+     */
+    template <typename Tp, typename T>
+        requires vector_3_type<T> // 模板参数约束
+    constexpr auto cvtVec3(const T &v) noexcept
+    {
+        return cv::Vec<Tp, 3>(get_x(v), get_y(v), get_z(v));
+    }
+
+
 } // namespace geom_utils_concepts
+
+namespace geom_utils_concepts
+{
+    /**
+     * @brief 通用 3D 向量类型转换
+     *
+     * @tparam Target 目标准类型，支持 cv::Vec<Tp,3> 或 cv::Matx<Tp,3,1>
+     * @tparam Source 源类型，满足 vector_3_type 概念
+     * @param v      待转换的向量
+     * @return Target 输出向量
+     */
+    template <typename Target, typename Source>
+        requires vector_3_type<Source> &&
+                 (std::same_as<std::remove_cvref_t<Target>, cv::Vec<typename Target::value_type, 3>> || std::same_as<std::remove_cvref_t<Target>, cv::Matx<typename Target::value_type, 3, 1>>)
+    constexpr Target convert3d(const Source &v) noexcept
+    {
+        using Tp = typename Target::value_type;
+        Tp x = get_x(v), y = get_y(v), z = get_z(v);
+        if constexpr (std::same_as<std::remove_cvref_t<Target>, cv::Vec<Tp, 3>>)
+        {
+            return Target{x, y, z};
+        }
+        else // cv::Matx<Tp,3,1>
+        {
+            return Target{x, y, z};
+        }
+    }
+}
