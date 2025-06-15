@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include "vis_core/logging/logging.h"
 
 /**
  * @brief 参数展开辅助宏
