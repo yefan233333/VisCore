@@ -1,11 +1,14 @@
 #pragma once
 
 #include <opencv2/core.hpp>
+#include <string>
 #include <memory>
+#include <unordered_map>
 #include "vis_core/property_wrapper/property_wrapper.hpp"
 #include "vis_core/contour_proc/contour_wrapper.hpp"
 #include "vis_core/img_proc/image_wrapper.hpp"
 #include "vis_core/pose_proc/transform6D.hpp"
+
 
 /**
  * @brief 特征节点
@@ -15,7 +18,7 @@
 class FeatureNode
 {
     using Ptr = std::shared_ptr<FeatureNode>;     //! 指针类型
-    using FeatureNodeMap = std::unordered_map<std::string, FeatureNode>;    //! 特征节点映射表类型
+    using FeatureNodeMap = std::unordered_map<std::string,Ptr>; //! 特征节点映射表类型
 
 public:
     /**
