@@ -5,8 +5,8 @@
 #include<unordered_map>
 #include<string>
 
-#include"vis_core/logging/logging.h"
-#include "vis_core/contour_proc/contour_proc.h"
+#include"vis_core/core/logging/logging.h"
+#include "vis_core/visual/contour_proc/contour_proc.h"
 
 /**
  * @class ImageWrapper

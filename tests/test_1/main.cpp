@@ -1,10 +1,10 @@
 #include <opencv2/opencv.hpp>
 // #include "transform6D.hpp"
-#include "vis_core/pose_proc/transform6D.hpp"
+#include "vis_core/math/pose_proc/transform6D.hpp"
 #include <iostream>
 #include <cmath>
 
-#include "vis_core/param_manager/param_manager.h"
+#include "vis_core/utils/param_manager/param_manager.h"
 
 struct TestParam
 {

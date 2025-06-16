@@ -4,7 +4,7 @@
 #include <opencv2/calib3d.hpp>
 #include <memory>
 
-#include "vis_core/geom_utils/type_utils.hpp"
+#include "vis_core/math/geom_utils/type_utils.hpp"
 
 //! Transform6D 的传入参数类型概念
 namespace transform6D_concepts

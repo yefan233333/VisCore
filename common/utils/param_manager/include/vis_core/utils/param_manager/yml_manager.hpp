@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "vis_core/logging/logging.h"
+#include "vis_core/core/logging/logging.h"
 
 #define YML_DEBUG 1
 #if YML_DEBUG

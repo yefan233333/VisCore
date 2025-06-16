@@ -2,8 +2,8 @@
 
 #include <opencv2/core.hpp>
 
-#include "vis_core/geom_utils/type_utils.hpp"
-#include "vis_core/logging/logging.h"
+#include "vis_core/math/geom_utils/type_utils.hpp"
+#include "vis_core/core/logging/logging.h"
 
 //! 角度制
 enum AngleMode : bool

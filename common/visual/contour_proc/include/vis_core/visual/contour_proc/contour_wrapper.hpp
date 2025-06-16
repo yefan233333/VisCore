@@ -5,7 +5,7 @@
 #include <bitset>
 #include <math.h>
 
-#include "vis_core/logging/logging.h"
+#include "vis_core/core/logging/logging.h"
 /**
  * @brief 可以用于ContourWrapper的基本算术类型 int 、float 和 double
  */

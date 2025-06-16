@@ -4,10 +4,10 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
-#include "vis_core/property_wrapper/property_wrapper.hpp"
-#include "vis_core/contour_proc/contour_wrapper.hpp"
-#include "vis_core/img_proc/image_wrapper.hpp"
-#include "vis_core/pose_proc/transform6D.hpp"
+#include "vis_core/core/property_wrapper/property_wrapper.hpp"
+#include "vis_core/visual/contour_proc/contour_wrapper.hpp"
+#include "vis_core/visual/img_proc/image_wrapper.hpp"
+#include "vis_core/math/pose_proc/transform6D.hpp"
 
 
 /**
