@@ -146,5 +146,38 @@ inline void findContours(cv::InputArray image,
     {
         contours.emplace_back(ContourWrapper<int>::create(std::move(contour)));
     }
-}                         
+}
+// drawContours(image, contours, -1, color, thickness, LINE_8, noArray(), 0, Point(0, 0));
+
+/**
+ * @brief 绘制轮廓到图像
+ * 
+ * @param[in] image 输入输出图像
+ * @param[in] contours 轮廓集合
+ * @param[in] contourIdx 绘制的轮廓索引，-1表示绘制所有轮廓
+ * @param[in] color 绘制颜色
+ * @param[in] thickness 绘制线条的粗细
+ * @param[in] lineType 绘制线条的类型
+ */
+inline void drawContours(cv::InputOutputArray image,
+                  const std::vector<Contour_ptr> &contours,
+                  int contourIdx,
+                  const cv::Scalar &color,
+                  int thickness = 1,
+                  int lineType = cv::LINE_8)
+{
+    if (contourIdx < -1 || contourIdx >= static_cast<int>(contours.size()))
+    {
+        throw std::out_of_range("Invalid contour index");
+    }
+
+    for (size_t i = 0; i < contours.size(); ++i)
+    {
+        if (contourIdx == -1 || contourIdx == static_cast<int>(i))
+        {
+            const auto &contour = contours[i];
+            cv::polylines(image, contour->points(), true, color, thickness, lineType);
+        }
+    }
+}
 

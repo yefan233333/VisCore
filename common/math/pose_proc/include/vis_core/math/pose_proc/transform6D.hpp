@@ -180,7 +180,7 @@ namespace transform6D_utils
 }
 
 // 默认构造函数
-Transform6D::Transform6D()
+inline Transform6D::Transform6D()
     : __tvec(TvecType::zeros())
 {
     // 默认构造时不初始化旋转矩阵和旋转向量
@@ -188,7 +188,7 @@ Transform6D::Transform6D()
 
 // 使用旋转矩阵和平移向量构造
 template <transform6D_concepts::rmat_type T, transform6D_concepts::tvec_type U>
-Transform6D::Transform6D(const T &rmat, const U &tvec)
+inline Transform6D::Transform6D(const T &rmat, const U &tvec)
     : __rmat(transform6D_utils::convertRmat(rmat)),
       __tvec(transform6D_utils::convertTvec(tvec)),
       __rmat_initialized(true),
@@ -199,7 +199,7 @@ Transform6D::Transform6D(const T &rmat, const U &tvec)
 
 // 使用旋转向量和平移向量构造
 template <transform6D_concepts::rvec_type T, transform6D_concepts::tvec_type U>
-Transform6D::Transform6D(const T &rvec, const U &tvec)
+inline Transform6D::Transform6D(const T &rvec, const U &tvec)
     : __rvec(transform6D_utils::convertRvec(rvec)),
       __tvec(transform6D_utils::convertTvec(tvec)),
       __rvec_initialized(true),
@@ -209,7 +209,7 @@ Transform6D::Transform6D(const T &rvec, const U &tvec)
 }
 
 // 确保旋转矩阵有效
-void Transform6D::ensureRmatInitialized() const
+inline void Transform6D::ensureRmatInitialized() const
 {
     if (!__rmat_initialized)
     {
@@ -228,7 +228,7 @@ void Transform6D::ensureRmatInitialized() const
 }
 
 // 确保旋转向量有效
-void Transform6D::ensureRvecInitialized() const
+inline void Transform6D::ensureRvecInitialized() const
 {
     if (!__rvec_initialized)
     {
@@ -246,25 +246,25 @@ void Transform6D::ensureRvecInitialized() const
     }
 }
 
-const Transform6D::RmatType &Transform6D::rmat() const noexcept
+inline const Transform6D::RmatType &Transform6D::rmat() const noexcept
 {
     ensureRmatInitialized();
     return __rmat;
 }
 
-const Transform6D::TvecType &Transform6D::tvec() const noexcept
+inline const Transform6D::TvecType &Transform6D::tvec() const noexcept
 {
     return __tvec;
 }
 
-const Transform6D::RvecType &Transform6D::rvec() const noexcept
+inline const Transform6D::RvecType &Transform6D::rvec() const noexcept
 {
     ensureRvecInitialized();
     return __rvec;
 }
 
 template <transform6D_concepts::rmat_type T>
-void Transform6D::rmat(const T &rmat) noexcept
+inline void Transform6D::rmat(const T &rmat) noexcept
 {
     __rmat = transform6D_utils::convertRmat(rmat);
     __rmat_initialized = true;
@@ -272,7 +272,7 @@ void Transform6D::rmat(const T &rmat) noexcept
 }
 
 template <transform6D_concepts::rvec_type T>
-void Transform6D::rvec(const T &rvec) noexcept
+inline void Transform6D::rvec(const T &rvec) noexcept
 {
     __rvec = transform6D_utils::convertRvec(rvec);
     __rvec_initialized = true;
@@ -280,7 +280,7 @@ void Transform6D::rvec(const T &rvec) noexcept
 }
 
 template <transform6D_concepts::tvec_type T>
-void Transform6D::tvec(const T &tvec) noexcept
+inline void Transform6D::tvec(const T &tvec) noexcept
 {
     __tvec = transform6D_utils::convertTvec(tvec);
 }

@@ -737,8 +737,10 @@ private:
     }
 };
 
-using ContourI_ptr = std::shared_ptr<ContourWrapper<int>>;
-using ContourF_ptr = std::shared_ptr<ContourWrapper<float>>;
-using ContourD_ptr = std::shared_ptr<ContourWrapper<double>>;
+using ContourI_ptr = std::shared_ptr<const ContourWrapper<int>>;
+using ContourF_ptr = std::shared_ptr<const ContourWrapper<float>>;
+using ContourD_ptr = std::shared_ptr<const ContourWrapper<double>>;
 
 using Contour_ptr = ContourI_ptr; //!< 默认轮廓类型为int
+
+#include "extensions.hpp"

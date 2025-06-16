@@ -4,21 +4,23 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+
 #include "vis_core/core/property_wrapper/property_wrapper.hpp"
 #include "vis_core/visual/contour_proc/contour_wrapper.hpp"
 #include "vis_core/visual/img_proc/image_wrapper.hpp"
 #include "vis_core/math/pose_proc/transform6D.hpp"
 
-
 /**
  * @brief 特征节点
- * 
+ *
  * @note 用于承载视觉识别的特征节点基类
  */
 class FeatureNode
 {
     using Ptr = std::shared_ptr<FeatureNode>;     //! 指针类型
     using FeatureNodeMap = std::unordered_map<std::string,Ptr>; //! 特征节点映射表类型
+public:
+    using DrawMask = std::uint64_t;
 
 public:
     /**
@@ -93,7 +95,7 @@ public:
      * 
      *       - 绘制类型 type : 是否需要绘制子特征、是否需要标注角点的位置等，需要子类实现具体逻辑
      */
-    virtual void drawFeature(cv::Mat &image, const cv::Scalar &color = cv::Scalar(100, 255, 0), int thickness = 2, int type = 0) const
+    virtual void drawFeature(cv::Mat &image, const cv::Scalar &color = cv::Scalar(100, 255, 0), int thickness = 2, DrawMask type = 0) const
     {
         // 默认实现为空，子类可以重载此方法以实现具体的绘制逻辑
         (void)image; // 避免未使用参数警告
