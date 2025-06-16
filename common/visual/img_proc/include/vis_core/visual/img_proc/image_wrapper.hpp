@@ -283,5 +283,5 @@ private:
     std::unordered_map<ContourGroupKey, ContourGroup> __contour_group_map;         //!< 轮廓组
 };
 
-using ImageWrapperPtr = std::shared_ptr<ImageWrapper>; //!< 图像包装器指针类型
-using ImgPtr = ImageWrapperPtr; //!< 图像包装器智能指针类型别名
+using ImageWrapper_ptr = std::shared_ptr<ImageWrapper>; //!< 图像包装器指针类型
+using Img_ptr = ImageWrapper_ptr; //!< 图像包装器智能指针类型别名

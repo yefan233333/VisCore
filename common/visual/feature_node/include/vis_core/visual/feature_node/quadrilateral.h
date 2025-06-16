@@ -27,7 +27,7 @@ public:
      * @param corners 四边形的角点
      */
     static Ptr create(const std::vector<cv::Point2f> &corners);
-    
+
     //=======================【绘制函数相关】========================
     //! 是否绘制四边形边框
     static constexpr DrawMask DrawBorder = 1u << 0; //!< 0x0001
@@ -69,4 +69,5 @@ protected:
      */
     virtual void drawFeatureImpl(cv::Mat &image, const cv::Scalar &color, int thickness, DrawMask type) const;
 };
-using QuadrilateralBasePtr = std::shared_ptr<QuadrilateralBase>;
+using QuadrilateralBase_ptr = std::shared_ptr<QuadrilateralBase>;
+using Quadrilateral_ptr = QuadrilateralBase_ptr; //!< 四边形特征节点指针类型

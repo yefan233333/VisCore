@@ -29,7 +29,7 @@ public:
     struct ImageCache
     {
         //! 来源图像
-        DEFINE_PROPERTY(SourceImage, public, public, (ImgPtr));
+        DEFINE_PROPERTY(SourceImage, public, public, (Img_ptr));
         //! 轮廓组
         DEFINE_PROPERTY(Contours, public, public, (std::vector<Contour_ptr>));
         //! 角点集
@@ -111,4 +111,4 @@ protected:
 
 };
 
-using FeatureNodePtr = std::shared_ptr<FeatureNode>;
+using FeatureNode_ptr = std::shared_ptr<FeatureNode>;

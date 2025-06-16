@@ -1,0 +1,9 @@
+VisCore_add_module(standard_rect
+    DEPENDS
+        logging
+        contour_proc
+        img_proc
+        pose_proc
+        property_wrapper
+        feature_node
+)
