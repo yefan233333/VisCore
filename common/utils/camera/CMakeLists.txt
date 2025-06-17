@@ -2,5 +2,5 @@
 
 VisCore_add_module(camera
 INTERFACE
-DEPENDS logging
+DEPENDS logging type_utils
 ) 

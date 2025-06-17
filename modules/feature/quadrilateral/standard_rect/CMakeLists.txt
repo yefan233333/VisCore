@@ -6,4 +6,6 @@ VisCore_add_module(standard_rect
         pose_proc
         property_wrapper
         feature_node
+        camera
+        param_manager
 )

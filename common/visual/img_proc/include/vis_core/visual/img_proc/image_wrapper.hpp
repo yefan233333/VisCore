@@ -93,11 +93,31 @@ public:
     }
 
     /**
+     * @brief 判断图像是否存在
+     * @param[in] key 处理图像的键
+     * @return true 存在
+     */
+    bool hasImg(const ProcImgKey &key) const
+    {
+        return __processed_image_map.find(key) != __processed_image_map.end();
+    }
+
+    /**
+     * @brief 根据键获取图像
+     * 
+     * @param[in] key 处理图像的键
+     */
+    cv::Mat& getImg(const ProcImgKey &key)
+    {
+        return getProcessedImageImpl(key);
+    }
+
+    /**
      * @brief 获取处理过的图像
      * 
      * @param[in] key 处理图像的键
      */
-    const cv::Mat& img(const ProcImgKey &key) const
+    const cv::Mat& getImg(const ProcImgKey &key) const
     {
         return getProcessedImageImpl(key);
     }
@@ -175,6 +195,27 @@ private:
     {
         return __source_image;
     }
+
+    /**
+     * @brief 获取处理过的图像
+     * 
+     * @param[in] key 处理图像的键
+     * 
+     * @note 如果图像不存在，则抛出异常
+     */
+    cv::Mat& getProcessedImageImpl(const ProcImgKey &key)
+    {
+        auto it = __processed_image_map.find(key);
+        if (it != __processed_image_map.end())
+        {
+            return it->second;
+        }
+        else
+        {
+            VISCORE_THROW_ERROR("处理图像不存在，键：%s", key.c_str());
+        }
+    }
+
 
     /**
      * @brief 通过键获取处理过的图像

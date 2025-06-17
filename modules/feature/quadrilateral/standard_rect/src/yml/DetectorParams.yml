@@ -1,0 +1,5 @@
+%YAML:1.0
+---
+lower_hsv: [ 0., 0., 200., 0. ]
+upper_hsv: [ 180., 25., 255., 0. ]
+color_threshold_debug: 0

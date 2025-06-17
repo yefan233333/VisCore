@@ -3,12 +3,15 @@
 
 #include "vis_core/visual/feature_node/quadrilateral.h"
 #include "vis_core/utils/camera/camera_wrapper.h"
+#include "vis_core/feature/standard_rect/standard_rect.h"
+// #include "vis_core/utils/param_manager/param_manager.h"
 // main.cpp ---------------------------------------------------------------
 // #include "quadrilateral_base.hpp" // 你的头文件路径
 #include <opencv2/opencv.hpp>
 #include <algorithm>
 #include <numeric>
 #include <iostream>
+
 
 // ---------- 帮助函数：按“左上、右上、右下、左下”顺时针排序 ----------
 static std::vector<cv::Point2f> sortClockwise(const std::vector<cv::Point2f> &pts)
@@ -32,7 +35,13 @@ static std::vector<cv::Point2f> sortClockwise(const std::vector<cv::Point2f> &pt
 }
 
 int main()
-{
+{  
+    auto detector = StandardRect::getDetector();
+    cv::Mat img;
+    auto img_ptr = ImageWrapper::create(img);
+    detector->detect(img_ptr, CameraWrapper::create());
+
+
     cv::VideoCapture cap(0);
     if (!cap.isOpened())
     {
